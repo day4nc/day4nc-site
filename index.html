@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Day4nc.store – Oyun Merkezi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:hsl(var(--hue) 100% 60%);
+  --bg:#0a0507;
+  --panel:rgba(20,12,15,.78);
+  --line:rgba(255,255,255,.08);
+  --text:#f5f1f2;
+  --muted:#b3a7aa;
+  /* İstersen arka plan fotoğrafı ekle: aynı klasöre bg.jpg koy */
+  --bg-image:url('bg.jpg');
+}
+@property --hue{syntax:'<number>';inherits:true;initial-value:345}
+@keyframes hue{0%{--hue:345}33%{--hue:285}66%{--hue:210}100%{--hue:345}}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(18vw,-12vh) scale(1.25)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1.1)}50%{transform:translate(-20vw,10vh) scale(.85)}}
+@keyframes drift3{0%,100%{transform:translate(0,0) scale(.9)}50%{transform:translate(12vw,16vh) scale(1.3)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 14px hsl(var(--hue) 100% 58% / .5)}50%{box-shadow:0 0 30px hsl(var(--hue) 100% 58% / .95)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(5px)}}
+@keyframes sheen{to{background-position:200% center}}
+html{animation:hue 24s linear infinite}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{
+  font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:var(--text);
+  background:
+    var(--bg-image) center/cover fixed no-repeat,
+    linear-gradient(180deg,#0d0709,#060304);
+  background-color:var(--bg);
+}
+body::before{content:"";position:fixed;inset:0;background:rgba(0,0,0,.35);pointer-events:none;z-index:0}
+.wrap{position:relative;z-index:1;max-width:1240px;margin:0 auto;padding:36px 28px 60px}
+
+.top{display:flex;align-items:center;gap:18px;padding-bottom:18px;border-bottom:1px solid var(--line)}
+.top svg.logo{width:36px;height:36px;color:var(--red);flex:none}
+.top .sep{width:1px;height:34px;background:var(--line)}
+.greet{font-size:.78rem;font-weight:600;letter-spacing:.2em;color:var(--muted);position:relative;padding-bottom:10px}
+.greet::after{content:"";position:absolute;left:0;bottom:0;width:80px;height:3px;background:linear-gradient(90deg,var(--red),hsl(calc(var(--hue) + 70) 100% 65%));border-radius:2px}
+
+.layout{display:grid;grid-template-columns:360px 1fr;gap:48px;margin-top:34px;align-items:start}
+
+.side{display:flex;flex-direction:column;gap:20px}
+.box{
+  position:relative;background:var(--panel);backdrop-filter:blur(6px);
+  border:1px solid var(--line);border-radius:14px;padding:22px;
+  display:flex;align-items:center;gap:18px;
+}
+.box.profile{border-color:hsl(var(--hue) 100% 58% / .35);padding:24px}
+.box.profile::after,.box.access::after{
+  content:"";position:absolute;right:-1px;bottom:-1px;width:28px;height:28px;
+  border-right:3px solid var(--red);border-bottom:3px solid var(--red);border-radius:0 0 14px 0;opacity:.85
+}
+.avatar{width:84px;height:84px;border-radius:50%;flex:none;border:3px solid var(--red);animation:pulse 3s ease-in-out infinite;overflow:hidden;background:#1a0f12}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.pname{font-size:1.35rem;font-weight:700;line-height:1.2}
+.phandle{color:var(--muted);font-size:.95rem;margin-top:2px}
+.status{display:flex;align-items:center;gap:7px;margin-top:8px;color:var(--red);font-size:.88rem;font-weight:500}
+.status i{width:9px;height:9px;border-radius:50%;background:var(--red);box-shadow:0 0 8px var(--red);animation:blink 1.6s ease-in-out infinite}
+.status.offline,.status.idle,.status.dnd{color:var(--muted)}
+.status.offline i,.status.idle i,.status.dnd i{background:var(--muted);box-shadow:none}
+
+.hex{width:54px;height:54px;flex:none;display:grid;place-items:center;color:var(--red);
+  background:hsl(var(--hue) 100% 58% / .12);
+  clip-path:polygon(25% 4%,75% 4%,100% 50%,75% 96%,25% 96%,0 50%)}
+.hex svg{width:24px;height:24px}
+.access .small{font-size:.82rem;color:var(--muted)}
+.access .big{font-size:1.1rem;font-weight:700;margin-top:3px}
+
+h1{margin:0 0 26px;font-size:2.6rem;font-weight:800;letter-spacing:-.01em;padding-left:18px;position:relative;line-height:1.1}
+h1::before{content:"";position:absolute;left:0;top:4px;bottom:4px;width:5px;background:var(--red);border-radius:2px}
+h1 span{background:linear-gradient(90deg,hsl(var(--hue) 100% 62%),hsl(calc(var(--hue) + 70) 100% 68%),hsl(var(--hue) 100% 62%));background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 5s linear infinite}
+.list{display:flex;flex-direction:column;gap:18px}
+.item{
+  position:relative;display:flex;align-items:center;gap:20px;padding:20px 24px;min-height:96px;
+  text-decoration:none;color:inherit;overflow:hidden;
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  transition:border-color .2s,transform .2s,box-shadow .2s;
+}
+.item::before{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(90deg,#120a0d 0%,rgba(18,10,13,.55) 45%,rgba(18,10,13,0) 100%),
+    var(--art);
+  background-size:cover;background-position:right center;
+  z-index:0;
+}
+.item>*{position:relative;z-index:1}
+.item:hover{border-color:hsl(var(--hue) 100% 58% / .6);box-shadow:0 0 0 1px hsl(var(--hue) 100% 58% / .25),0 8px 30px hsl(var(--hue) 100% 58% / .15);transform:translateY(-2px)}
+.item:focus-visible{outline:2px solid var(--red);outline-offset:3px}
+.item .t{font-size:1.1rem;font-weight:600}
+.item .d{font-size:.88rem;color:var(--muted);margin-top:4px}
+.item .go{margin-left:auto;color:var(--red)}
+.item .go svg{width:26px;height:26px;animation:nudge 1.8s ease-in-out infinite}
+
+/* Her kartın sağ görseli: --art:url('gta.jpg') yazarak kendi resmini koyabilirsin */
+.a1{--art:linear-gradient(120deg,transparent 35%,hsl(calc(var(--hue) + 40) 100% 60% / .3))}
+.a2{--art:linear-gradient(120deg,transparent 35%,hsl(calc(var(--hue) - 60) 100% 62% / .3))}
+.a3{--art:linear-gradient(120deg,transparent 35%,hsl(var(--hue) 100% 58% / .3))}
+.a4{--art:linear-gradient(120deg,transparent 35%,hsl(calc(var(--hue) - 30) 100% 55% / .3))}
+.a5{--art:linear-gradient(120deg,transparent 35%,hsl(var(--hue) 100% 58% / .2))}
+
+footer{margin-top:40px;color:var(--muted);font-size:.8rem}
+
+@media (max-width:900px){
+  .layout{grid-template-columns:1fr;gap:30px}
+  h1{font-size:2rem}
+}
+@media (max-width:480px){
+  .wrap{padding:24px 16px 40px}
+  .item{padding:16px;gap:14px}
+  .hex{width:46px;height:46px}
+  .greet{font-size:.65rem}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+/* ===== SİNEMATİK GECE ŞEHRİ ARKA PLANI (sadece arka plan) ===== */
+@keyframes sceneIn{from{opacity:0}}
+@keyframes rain500{to{transform:translate3d(0,500px,0)}}
+@keyframes rain300{to{transform:translate3d(0,300px,0)}}
+@keyframes fogMove{to{transform:translate3d(-50%,0,0)}}
+@keyframes fogMoveR{from{transform:translate3d(-50%,0,0)}to{transform:translate3d(0,0,0)}}
+@keyframes sway1{from{transform:rotate(13deg)}to{transform:rotate(23deg)}}
+@keyframes sway2{from{transform:rotate(-16deg)}to{transform:rotate(-6deg)}}
+@keyframes sway3{from{transform:rotate(8deg)}to{transform:rotate(-4deg)}}
+@keyframes glowPulse{from{opacity:.6}to{opacity:.95}}
+@keyframes bokeh{from{opacity:.12;transform:scale(.92)}to{opacity:.42;transform:scale(1.12)}}
+@keyframes shimmer{from{opacity:.08;transform:scaleX(.8)}to{opacity:.3;transform:scaleX(1.1)}}
+@keyframes refl{from{opacity:.25;transform:scaleY(.92)}to{opacity:.6;transform:scaleY(1.08)}}
+@keyframes blinkDot{0%,90%,100%{opacity:.9}94%{opacity:.1}}
+.scene{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;--px:0;--py:0;
+  background:linear-gradient(180deg,#03020a 0%,#0a0620 36%,#170a31 62%,#240c3b 70%);animation:sceneIn 3.2s ease-out both}
+.scene *{pointer-events:none}
+.layer{position:absolute;left:-40px;right:-40px;will-change:transform;
+  transform:translate3d(calc(var(--px)*var(--f,0)*-1px),calc(var(--py)*var(--f,0)*-.6px),0)}
+.l-city{bottom:30vh;height:min(46vh,460px);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 34%);mask-image:linear-gradient(180deg,transparent 0,#000 34%)}
+.sk{display:block;width:100%;height:100%}
+.l-far{--f:5;opacity:.5}.l-far .sk{filter:blur(4px)}
+.l-mid{--f:11;opacity:.62}.l-mid .sk{filter:blur(1.6px)}
+.l-near{--f:20;height:min(34vh,340px);opacity:.9}.l-near .sk{filter:blur(6px)}
+.bk{animation:blinkDot 6s linear infinite}
+.glow{position:absolute;left:0;right:0;bottom:24vh;height:30vh;animation:glowPulse 10s ease-in-out infinite alternate;
+  background:radial-gradient(60% 100% at 28% 100%,hsl(322 85% 55%/.26),transparent 70%),radial-gradient(50% 100% at 74% 100%,hsl(215 90% 55%/.22),transparent 70%),radial-gradient(40% 90% at 50% 100%,hsl(272 80% 60%/.24),transparent 70%)}
+.ground{position:absolute;left:0;right:0;bottom:0;height:30vh;overflow:hidden;
+  background:linear-gradient(180deg,#120920 0%,#08040f 40%,#020108 100%);box-shadow:0 -2px 34px hsl(272 80% 60%/.18)}
+.ground::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,hsl(272 80% 60%/.08),transparent 40%)}
+.refl{top:0;height:min(46vh,460px);--f:11;opacity:.24;-webkit-mask-image:linear-gradient(180deg,#000,transparent 70%);mask-image:linear-gradient(180deg,#000,transparent 70%)}
+.refl .sk{transform:scaleY(-1);filter:blur(6px)}
+.l-rs{top:0;bottom:0;--f:11}
+.l-rs i{position:absolute;top:0;transform-origin:top;border-radius:50%;filter:blur(5px);background:linear-gradient(180deg,hsl(var(--c) 85% 60%/.5),transparent);animation:refl 7s ease-in-out infinite alternate;animation-delay:var(--dl)}
+.streaks i{position:absolute;height:3px;border-radius:50%;filter:blur(3px);animation:shimmer 8s ease-in-out infinite alternate;animation-delay:var(--dl);background:hsl(var(--c) 85% 62%)}
+.l-fog{top:0;bottom:0;--f:16}
+.fog{position:absolute;left:0;width:200%;filter:blur(16px);background-repeat:repeat-x;background-size:50% 100%}
+.fog1{bottom:22vh;height:36vh;opacity:.6;animation:fogMove 110s linear infinite;
+  background-image:radial-gradient(ellipse 40% 60% at 25% 60%,hsl(272 50% 50%/.34),transparent),radial-gradient(ellipse 35% 50% at 75% 45%,hsl(322 55% 50%/.22),transparent)}
+.fog2{bottom:4vh;height:26vh;opacity:.45;animation:fogMoveR 160s linear infinite;
+  background-image:radial-gradient(ellipse 45% 55% at 30% 50%,hsl(212 60% 50%/.26),transparent),radial-gradient(ellipse 30% 45% at 80% 55%,hsl(272 50% 50%/.26),transparent)}
+.l-beams{top:0;bottom:0;--f:9}
+.beam{position:absolute;top:-12vh;width:26vw;height:125vh;transform-origin:50% 0;filter:blur(28px);mix-blend-mode:screen;opacity:.3}
+.b1{left:6%;background:linear-gradient(180deg,transparent,hsl(322 85% 58%/.26) 30%,transparent 82%);animation:sway1 28s ease-in-out infinite alternate}
+.b2{left:48%;background:linear-gradient(180deg,transparent,hsl(272 80% 60%/.28) 30%,transparent 82%);animation:sway2 34s ease-in-out infinite alternate}
+.b3{left:80%;background:linear-gradient(180deg,transparent,hsl(212 90% 58%/.22) 30%,transparent 82%);animation:sway3 31s ease-in-out infinite alternate}
+.l-bokeh{top:0;bottom:0;--f:14}
+.l-bokeh i{position:absolute;border-radius:50%;filter:blur(5px);background:radial-gradient(circle,hsl(var(--c) 85% 64%/.8),transparent 70%);animation:bokeh 8s ease-in-out infinite alternate;animation-delay:var(--dl)}
+.rain{position:absolute;left:0;right:0;bottom:0}
+.rain1{top:-500px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22500%22%20height%3D%22500%22%3E%3Cg%20stroke%3D%22%23d5c8ff%22%20stroke-width%3D%220.55%22%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%22301%22%20y1%3D%22435%22%20x2%3D%22299%22%20y2%3D%22469%22%20stroke-opacity%3D%220.76%22%2F%3E%3Cline%20x1%3D%22140%22%20y1%3D%2262%22%20x2%3D%22138%22%20y2%3D%2292%22%20stroke-opacity%3D%220.55%22%2F%3E%3Cline%20x1%3D%22251%22%20y1%3D%22335%22%20x2%3D%22248%22%20y2%3D%22389%22%20stroke-opacity%3D%220.47%22%2F%3E%3Cline%20x1%3D%2258%22%20y1%3D%22251%22%20x2%3D%2256%22%20y2%3D%22290%22%20stroke-opacity%3D%220.22%22%2F%3E%3Cline%20x1%3D%22209%22%20y1%3D%22223%22%20x2%3D%22205%22%20y2%3D%22302%22%20stroke-opacity%3D%220.63%22%2F%3E%3Cline%20x1%3D%2211%22%20y1%3D%22358%22%20x2%3D%227%22%20y2%3D%22433%22%20stroke-opacity%3D%220.51%22%2F%3E%3Cline%20x1%3D%22420%22%20y1%3D%22119%22%20x2%3D%22416%22%20y2%3D%22191%22%20stroke-opacity%3D%220.61%22%2F%3E%3Cline%20x1%3D%22471%22%20y1%3D%22164%22%20x2%3D%22469%22%20y2%3D%22196%22%20stroke-opacity%3D%220.22%22%2F%3E%3Cline%20x1%3D%22342%22%20y1%3D%22279%22%20x2%3D%22341%22%20y2%3D%22306%22%20stroke-opacity%3D%220.21%22%2F%3E%3Cline%20x1%3D%22361%22%20y1%3D%22112%22%20x2%3D%22359%22%20y2%3D%22162%22%20stroke-opacity%3D%220.88%22%2F%3E%3Cline%20x1%3D%2224%22%20y1%3D%22272%22%20x2%3D%2220%22%20y2%3D%22344%22%20stroke-opacity%3D%220.36%22%2F%3E%3Cline%20x1%3D%22490%22%20y1%3D%22255%22%20x2%3D%22487%22%20y2%3D%22309%22%20stroke-opacity%3D%220.59%22%2F%3E%3Cline%20x1%3D%22128%22%20y1%3D%22348%22%20x2%3D%22126%22%20y2%3D%22396%22%20stroke-opacity%3D%220.35%22%2F%3E%3Cline%20x1%3D%22158%22%20y1%3D%2213%22%20x2%3D%22155%22%20y2%3D%2268%22%20stroke-opacity%3D%220.49%22%2F%3E%3Cline%20x1%3D%22482%22%20y1%3D%22330%22%20x2%3D%22479%22%20y2%3D%22391%22%20stroke-opacity%3D%220.27%22%2F%3E%3Cline%20x1%3D%22380%22%20y1%3D%22153%22%20x2%3D%22377%22%20y2%3D%22219%22%20stroke-opacity%3D%220.28%22%2F%3E%3Cline%20x1%3D%22468%22%20y1%3D%22371%22%20x2%3D%22466%22%20y2%3D%22418%22%20stroke-opacity%3D%220.88%22%2F%3E%3Cline%20x1%3D%22489%22%20y1%3D%22218%22%20x2%3D%22486%22%20y2%3D%22276%22%20stroke-opacity%3D%220.56%22%2F%3E%3Cline%20x1%3D%22107%22%20y1%3D%22157%22%20x2%3D%22104%22%20y2%3D%22225%22%20stroke-opacity%3D%220.40%22%2F%3E%3Cline%20x1%3D%22443%22%20y1%3D%22260%22%20x2%3D%22440%22%20y2%3D%22317%22%20stroke-opacity%3D%220.48%22%2F%3E%3Cline%20x1%3D%2227%22%20y1%3D%22247%22%20x2%3D%2223%22%20y2%3D%22327%22%20stroke-opacity%3D%220.37%22%2F%3E%3Cline%20x1%3D%22216%22%20y1%3D%22214%22%20x2%3D%22212%22%20y2%3D%22291%22%20stroke-opacity%3D%220.67%22%2F%3E%3Cline%20x1%3D%22290%22%20y1%3D%22361%22%20x2%3D%22288%22%20y2%3D%22410%22%20stroke-opacity%3D%220.74%22%2F%3E%3Cline%20x1%3D%22201%22%20y1%3D%2246%22%20x2%3D%22197%22%20y2%3D%22119%22%20stroke-opacity%3D%220.51%22%2F%3E%3Cline%20x1%3D%2265%22%20y1%3D%22400%22%20x2%3D%2262%22%20y2%3D%22458%22%20stroke-opacity%3D%220.31%22%2F%3E%3Cline%20x1%3D%22211%22%20y1%3D%22191%22%20x2%3D%22207%22%20y2%3D%22270%22%20stroke-opacity%3D%220.54%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");opacity:.13;animation:rain500 .9s linear infinite}
+.rain2{top:-300px;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22300%22%20height%3D%22300%22%3E%3Cg%20stroke%3D%22%23d5c8ff%22%20stroke-width%3D%220.45%22%20stroke-linecap%3D%22round%22%3E%3Cline%20x1%3D%2238%22%20y1%3D%2225%22%20x2%3D%2234%22%20y2%3D%22105%22%20stroke-opacity%3D%220.26%22%2F%3E%3Cline%20x1%3D%2296%22%20y1%3D%22190%22%20x2%3D%2292%22%20y2%3D%22269%22%20stroke-opacity%3D%220.77%22%2F%3E%3Cline%20x1%3D%22167%22%20y1%3D%2266%22%20x2%3D%22163%22%20y2%3D%22146%22%20stroke-opacity%3D%220.62%22%2F%3E%3Cline%20x1%3D%2228%22%20y1%3D%22150%22%20x2%3D%2225%22%20y2%3D%22214%22%20stroke-opacity%3D%220.68%22%2F%3E%3Cline%20x1%3D%22211%22%20y1%3D%22207%22%20x2%3D%22208%22%20y2%3D%22260%22%20stroke-opacity%3D%220.71%22%2F%3E%3Cline%20x1%3D%22200%22%20y1%3D%22141%22%20x2%3D%22197%22%20y2%3D%22199%22%20stroke-opacity%3D%220.85%22%2F%3E%3Cline%20x1%3D%22147%22%20y1%3D%22232%22%20x2%3D%22144%22%20y2%3D%22290%22%20stroke-opacity%3D%220.23%22%2F%3E%3Cline%20x1%3D%22196%22%20y1%3D%22240%22%20x2%3D%22195%22%20y2%3D%22267%22%20stroke-opacity%3D%220.85%22%2F%3E%3Cline%20x1%3D%22226%22%20y1%3D%22230%22%20x2%3D%22224%22%20y2%3D%22280%22%20stroke-opacity%3D%220.82%22%2F%3E%3Cline%20x1%3D%22100%22%20y1%3D%22122%22%20x2%3D%2298%22%20y2%3D%22158%22%20stroke-opacity%3D%220.36%22%2F%3E%3Cline%20x1%3D%22176%22%20y1%3D%2290%22%20x2%3D%22174%22%20y2%3D%22127%22%20stroke-opacity%3D%220.30%22%2F%3E%3Cline%20x1%3D%22194%22%20y1%3D%22133%22%20x2%3D%22191%22%20y2%3D%22191%22%20stroke-opacity%3D%220.67%22%2F%3E%3Cline%20x1%3D%22238%22%20y1%3D%22214%22%20x2%3D%22236%22%20y2%3D%22251%22%20stroke-opacity%3D%220.71%22%2F%3E%3Cline%20x1%3D%22196%22%20y1%3D%22204%22%20x2%3D%22192%22%20y2%3D%22278%22%20stroke-opacity%3D%220.62%22%2F%3E%3Cline%20x1%3D%22238%22%20y1%3D%2243%22%20x2%3D%22236%22%20y2%3D%2292%22%20stroke-opacity%3D%220.87%22%2F%3E%3Cline%20x1%3D%22246%22%20y1%3D%22169%22%20x2%3D%22243%22%20y2%3D%22220%22%20stroke-opacity%3D%220.57%22%2F%3E%3Cline%20x1%3D%22152%22%20y1%3D%22238%22%20x2%3D%22149%22%20y2%3D%22295%22%20stroke-opacity%3D%220.55%22%2F%3E%3Cline%20x1%3D%22191%22%20y1%3D%22171%22%20x2%3D%22188%22%20y2%3D%22229%22%20stroke-opacity%3D%220.82%22%2F%3E%3Cline%20x1%3D%22189%22%20y1%3D%22147%22%20x2%3D%22186%22%20y2%3D%22202%22%20stroke-opacity%3D%220.71%22%2F%3E%3Cline%20x1%3D%22243%22%20y1%3D%22126%22%20x2%3D%22240%22%20y2%3D%22187%22%20stroke-opacity%3D%220.66%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");opacity:.08;filter:blur(.5px);animation:rain300 1.5s linear infinite}
+.vig{position:absolute;inset:0;background:radial-gradient(125% 95% at 50% 45%,rgba(0,0,0,.3) 30%,rgba(0,0,0,.68) 100%)}
+.grain{position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22200%22%20height%3D%22200%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%22.9%22%20numOctaves%3D%222%22%20stitchTiles%3D%22stitch%22%2F%3E%3CfeColorMatrix%20values%3D%220%200%200%200%201%200%200%200%200%201%200%200%200%200%201%200%200%200%20.7%200%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22200%22%20height%3D%22200%22%20filter%3D%22url%28%23n%29%22%2F%3E%3C%2Fsvg%3E");opacity:.045}
+/* Okunabilirlik: kartların arkasında koyu, yumuşak kenarlı overlay */
+.layout{position:relative}
+.layout::before{content:"";position:absolute;inset:-30px -36px;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse at center,rgba(4,2,9,.68) 50%,rgba(4,2,9,0) 100%)}
+.item{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+@media (max-width:768px),(hover:none){
+  .layer{transform:none}
+  .rain2,.fog2,.beam:nth-child(n+3),.l-bokeh i:nth-child(n+7),.l-rs i:nth-child(n+5){display:none}
+  .fog,.beam{filter:blur(14px)}
+  .item,.box{backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+@media (prefers-reduced-motion:reduce){.rain{display:none}.layer{transform:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="gfar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b1b4d"/><stop offset="1" stop-color="#150c2c"/></linearGradient><linearGradient id="gmid" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1036"/><stop offset="1" stop-color="#090516"/></linearGradient><linearGradient id="gnear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0c0719"/><stop offset="1" stop-color="#030208"/></linearGradient><symbol id="sk-far" viewBox="0 0 1600 420"><g fill="url(#gfar)"><rect x="-20" y="179" width="45" height="241"/><rect x="25" y="247" width="74" height="173"/><polygon points="115,420 115,217 137,187 166,187 188,217 188,420"/><rect x="191" y="219" width="41" height="201"/><rect x="199" y="203" width="25" height="16"/><rect x="232" y="291" width="56" height="129"/><rect x="304" y="269" width="49" height="151"/><rect x="353" y="298" width="33" height="122"/><rect x="386" y="275" width="45" height="145"/><rect x="431" y="247" width="65" height="173"/><rect x="444" y="231" width="39" height="16"/><rect x="512" y="262" width="67" height="158"/><rect x="595" y="207" width="31" height="213"/><rect x="601" y="191" width="19" height="16"/><rect x="629" y="244" width="36" height="176"/><rect x="665" y="261" width="39" height="159"/><polygon points="712,420 712,207 721,177 734,177 743,207 743,420"/><rect x="751" y="214" width="41" height="206"/><polygon points="800,420 800,192 816,162 836,162 852,192 852,420"/><polygon points="852,420 852,203 874,173 903,173 925,203 925,420"/><rect x="933" y="212" width="49" height="208"/><rect x="957" y="178" width="1.6" height="34"/><rect x="990" y="264" width="56" height="156"/><rect x="1049" y="219" width="36" height="201"/><rect x="1085" y="317" width="55" height="103"/><rect x="1140" y="294" width="53" height="126"/><rect x="1193" y="288" width="49" height="132"/><rect x="1258" y="167" width="53" height="253"/><rect x="1314" y="304" width="71" height="116"/><rect x="1388" y="328" width="34" height="92"/><polygon points="1422,420 1422,228 1443,198 1472,198 1493,228 1493,420"/><polygon points="1509,420 1509,198 1525,168 1545,168 1561,198 1561,420"/><rect x="1535" y="134" width="1.6" height="34"/><rect x="1561" y="296" width="36" height="124"/></g><path d="M-8 200h3v4h-3zM16 200h3v4h-3zM0 222h3v4h-3zM-16 321h3v4h-3zM0 321h3v4h-3zM8 321h3v4h-3zM16 321h3v4h-3zM53 323h3v4h-3zM77 323h3v4h-3zM37 400h3v4h-3zM45 400h3v4h-3zM53 400h3v4h-3zM85 400h3v4h-3zM127 351h3v4h-3zM151 351h3v4h-3zM175 351h3v4h-3zM167 395h3v4h-3zM203 284h3v4h-3zM211 361h3v4h-3zM236 411h3v4h-3zM268 411h3v4h-3zM276 411h3v4h-3zM324 411h3v4h-3zM332 411h3v4h-3zM340 411h3v4h-3zM357 308h3v4h-3zM357 330h3v4h-3zM365 330h3v4h-3zM365 374h3v4h-3zM390 296h3v4h-3zM398 362h3v4h-3zM414 362h3v4h-3zM467 257h3v4h-3zM443 389h3v4h-3zM599 261h3v4h-3zM599 283h3v4h-3zM615 283h3v4h-3zM607 305h3v4h-3zM615 305h3v4h-3zM615 316h3v4h-3zM599 349h3v4h-3zM615 349h3v4h-3zM633 254h3v4h-3zM641 276h3v4h-3zM649 386h3v4h-3zM657 386h3v4h-3zM677 326h3v4h-3zM693 326h3v4h-3zM724 187h3v4h-3zM724 220h3v4h-3zM732 231h3v4h-3zM732 286h3v4h-3zM724 330h3v4h-3zM724 396h3v4h-3zM732 396h3v4h-3zM763 268h3v4h-3zM771 268h3v4h-3zM779 268h3v4h-3zM755 279h3v4h-3zM763 279h3v4h-3zM771 279h3v4h-3zM779 279h3v4h-3zM755 301h3v4h-3zM771 301h3v4h-3zM779 301h3v4h-3zM779 334h3v4h-3zM779 389h3v4h-3zM755 400h3v4h-3zM812 194h3v4h-3zM828 304h3v4h-3zM844 304h3v4h-3zM812 370h3v4h-3zM820 370h3v4h-3zM836 370h3v4h-3zM844 370h3v4h-3zM812 392h3v4h-3zM804 403h3v4h-3zM820 403h3v4h-3zM844 403h3v4h-3zM856 282h3v4h-3zM872 282h3v4h-3zM912 282h3v4h-3zM856 315h3v4h-3zM864 315h3v4h-3zM880 315h3v4h-3zM880 337h3v4h-3zM904 337h3v4h-3zM856 348h3v4h-3zM864 348h3v4h-3zM872 348h3v4h-3zM888 348h3v4h-3zM904 348h3v4h-3zM937 244h3v4h-3zM945 255h3v4h-3zM994 318h3v4h-3zM1002 318h3v4h-3zM1018 318h3v4h-3zM1010 384h3v4h-3zM1018 384h3v4h-3zM994 395h3v4h-3zM1002 395h3v4h-3zM1018 395h3v4h-3zM1034 395h3v4h-3zM1061 262h3v4h-3zM1077 262h3v4h-3zM1061 328h3v4h-3zM1069 328h3v4h-3zM1061 383h3v4h-3zM1069 383h3v4h-3zM1089 360h3v4h-3zM1097 360h3v4h-3zM1113 360h3v4h-3zM1121 360h3v4h-3zM1129 360h3v4h-3zM1168 370h3v4h-3zM1176 370h3v4h-3zM1205 309h3v4h-3zM1213 309h3v4h-3zM1221 309h3v4h-3zM1229 309h3v4h-3zM1278 254h3v4h-3zM1294 254h3v4h-3zM1294 320h3v4h-3zM1318 314h3v4h-3zM1334 314h3v4h-3zM1342 314h3v4h-3zM1350 314h3v4h-3zM1326 380h3v4h-3zM1342 380h3v4h-3zM1366 380h3v4h-3zM1374 380h3v4h-3zM1318 402h3v4h-3zM1334 402h3v4h-3zM1350 402h3v4h-3zM1374 402h3v4h-3zM1426 230h3v4h-3zM1474 230h3v4h-3zM1474 241h3v4h-3zM1482 241h3v4h-3zM1458 252h3v4h-3zM1466 252h3v4h-3zM1474 252h3v4h-3zM1426 274h3v4h-3zM1434 274h3v4h-3zM1450 274h3v4h-3zM1458 274h3v4h-3zM1434 296h3v4h-3zM1458 296h3v4h-3zM1482 296h3v4h-3zM1450 406h3v4h-3zM1466 406h3v4h-3zM1482 406h3v4h-3zM1529 288h3v4h-3zM1529 310h3v4h-3zM1537 310h3v4h-3zM1553 310h3v4h-3zM1513 354h3v4h-3zM1545 354h3v4h-3zM1553 354h3v4h-3zM1521 376h3v4h-3zM1537 376h3v4h-3zM1553 376h3v4h-3zM1573 361h3v4h-3z" fill="hsl(38 45% 78%)" opacity="0.5"/><path d="M16 222h3v4h-3zM85 323h3v4h-3zM357 352h3v4h-3zM357 363h3v4h-3zM451 257h3v4h-3zM451 389h3v4h-3zM599 305h3v4h-3zM633 331h3v4h-3zM716 220h3v4h-3zM716 330h3v4h-3zM755 334h3v4h-3zM763 400h3v4h-3zM820 194h3v4h-3zM836 194h3v4h-3zM836 304h3v4h-3zM904 315h3v4h-3zM1442 274h3v4h-3zM1474 274h3v4h-3zM1482 274h3v4h-3zM1434 406h3v4h-3zM1545 288h3v4h-3zM1521 310h3v4h-3z" fill="hsl(322 85% 62%)" opacity="0.7"/><path d="M45 323h3v4h-3zM61 323h3v4h-3zM119 395h3v4h-3zM135 395h3v4h-3zM211 284h3v4h-3zM236 378h3v4h-3zM324 389h3v4h-3zM414 406h3v4h-3zM483 389h3v4h-3zM607 283h3v4h-3zM641 386h3v4h-3zM755 268h3v4h-3zM763 334h3v4h-3zM820 392h3v4h-3zM904 282h3v4h-3zM880 348h3v4h-3zM912 348h3v4h-3zM1002 274h3v4h-3zM1002 384h3v4h-3zM1144 370h3v4h-3zM1442 241h3v4h-3z" fill="hsl(272 80% 66%)" opacity="0.7"/><path d="M-16 200h3v4h-3zM8 200h3v4h-3zM69 400h3v4h-3zM143 395h3v4h-3zM219 284h3v4h-3zM260 411h3v4h-3zM373 330h3v4h-3zM414 296h3v4h-3zM422 362h3v4h-3zM390 373h3v4h-3zM398 373h3v4h-3zM435 389h3v4h-3zM615 272h3v4h-3zM649 265h3v4h-3zM693 304h3v4h-3zM669 326h3v4h-3zM724 198h3v4h-3zM732 220h3v4h-3zM763 301h3v4h-3zM771 334h3v4h-3zM779 400h3v4h-3zM804 194h3v4h-3zM804 337h3v4h-3zM836 337h3v4h-3zM804 370h3v4h-3zM804 392h3v4h-3zM836 403h3v4h-3zM864 337h3v4h-3zM888 337h3v4h-3zM896 337h3v4h-3zM961 255h3v4h-3zM994 274h3v4h-3zM994 384h3v4h-3zM1053 328h3v4h-3zM1053 383h3v4h-3zM1053 394h3v4h-3zM1061 394h3v4h-3zM1069 394h3v4h-3zM1286 254h3v4h-3zM1262 320h3v4h-3zM1278 320h3v4h-3zM1286 320h3v4h-3zM1450 230h3v4h-3zM1434 252h3v4h-3zM1450 252h3v4h-3zM1529 376h3v4h-3zM1581 361h3v4h-3z" fill="hsl(212 90% 62%)" opacity="0.75"/><circle cx="957.8" cy="178" r="1.8" fill="hsl(0 90% 60%)" class="bk"/><circle cx="1535.8" cy="134" r="1.8" fill="hsl(0 90% 60%)" class="bk"/></symbol><symbol id="sk-mid" viewBox="0 0 1600 420"><g fill="url(#gmid)"><rect x="-20" y="196" width="50" height="224"/><rect x="-10" y="180" width="30" height="16"/><rect x="33" y="122" width="60" height="298"/><rect x="93" y="161" width="86" height="259"/><rect x="110" y="145" width="52" height="16"/><rect x="182" y="65" width="54" height="355"/><rect x="209" y="31" width="1.6" height="34"/><rect x="244" y="169" width="59" height="251"/><rect x="256" y="153" width="35" height="16"/><polygon points="319,420 319,200 333,170 351,170 365,200 365,420"/><rect x="381" y="272" width="53" height="148"/><polygon points="437,420 437,116 449,86 466,86 478,116 478,420"/><rect x="478" y="173" width="59" height="247"/><rect x="507" y="139" width="1.6" height="34"/><rect x="537" y="78" width="70" height="342"/><rect x="572" y="44" width="1.6" height="34"/><polygon points="615,420 615,243 632,213 654,213 671,243 671,420"/><rect x="643" y="179" width="1.6" height="34"/><rect x="674" y="53" width="36" height="367"/><rect x="710" y="60" width="36" height="360"/><rect x="717" y="44" width="22" height="16"/><rect x="746" y="161" width="77" height="259"/><rect x="823" y="195" width="80" height="225"/><rect x="839" y="179" width="48" height="16"/><rect x="906" y="250" width="66" height="170"/><polygon points="972,420 972,108 997,78 1030,78 1055,108 1055,420"/><rect x="1058" y="232" width="66" height="188"/><rect x="1127" y="51" width="64" height="369"/><rect x="1159" y="17" width="1.6" height="34"/><rect x="1191" y="101" width="41" height="319"/><rect x="1235" y="139" width="83" height="281"/><rect x="1252" y="123" width="50" height="16"/><rect x="1276" y="105" width="1.6" height="34"/><rect x="1318" y="154" width="48" height="266"/><rect x="1366" y="225" width="75" height="195"/><rect x="1381" y="209" width="45" height="16"/><rect x="1441" y="146" width="87" height="274"/><rect x="1528" y="118" width="36" height="302"/><rect x="1564" y="55" width="74" height="365"/></g><path d="M-8 206h3v4h-3zM0 206h3v4h-3zM8 206h3v4h-3zM-16 217h3v4h-3zM-8 217h3v4h-3zM8 217h3v4h-3zM-8 250h3v4h-3zM-16 294h3v4h-3zM-8 294h3v4h-3zM16 294h3v4h-3zM-16 305h3v4h-3zM-8 305h3v4h-3zM16 305h3v4h-3zM8 316h3v4h-3zM-16 338h3v4h-3zM-8 338h3v4h-3zM0 338h3v4h-3zM8 338h3v4h-3zM16 338h3v4h-3zM77 143h3v4h-3zM45 165h3v4h-3zM53 165h3v4h-3zM61 165h3v4h-3zM69 165h3v4h-3zM37 209h3v4h-3zM69 209h3v4h-3zM77 209h3v4h-3zM37 253h3v4h-3zM61 253h3v4h-3zM37 275h3v4h-3zM69 275h3v4h-3zM45 286h3v4h-3zM69 286h3v4h-3zM45 407h3v4h-3zM61 407h3v4h-3zM77 407h3v4h-3zM113 292h3v4h-3zM145 292h3v4h-3zM169 292h3v4h-3zM97 391h3v4h-3zM105 391h3v4h-3zM121 391h3v4h-3zM129 391h3v4h-3zM145 391h3v4h-3zM153 391h3v4h-3zM169 391h3v4h-3zM194 86h3v4h-3zM202 86h3v4h-3zM210 196h3v4h-3zM186 229h3v4h-3zM194 229h3v4h-3zM210 229h3v4h-3zM218 229h3v4h-3zM218 251h3v4h-3zM186 328h3v4h-3zM210 328h3v4h-3zM264 223h3v4h-3zM280 223h3v4h-3zM296 223h3v4h-3zM272 289h3v4h-3zM288 289h3v4h-3zM272 300h3v4h-3zM256 311h3v4h-3zM296 311h3v4h-3zM272 322h3v4h-3zM296 322h3v4h-3zM256 333h3v4h-3zM272 333h3v4h-3zM288 333h3v4h-3zM296 355h3v4h-3zM355 180h3v4h-3zM323 202h3v4h-3zM347 202h3v4h-3zM355 202h3v4h-3zM347 213h3v4h-3zM355 246h3v4h-3zM323 257h3v4h-3zM331 257h3v4h-3zM347 257h3v4h-3zM347 312h3v4h-3zM323 400h3v4h-3zM331 400h3v4h-3zM339 400h3v4h-3zM401 337h3v4h-3zM409 337h3v4h-3zM417 337h3v4h-3zM385 370h3v4h-3zM393 370h3v4h-3zM401 370h3v4h-3zM409 370h3v4h-3zM417 370h3v4h-3zM425 370h3v4h-3zM393 381h3v4h-3zM401 381h3v4h-3zM385 403h3v4h-3zM393 403h3v4h-3zM441 129h3v4h-3zM449 129h3v4h-3zM465 173h3v4h-3zM457 217h3v4h-3zM449 239h3v4h-3zM457 294h3v4h-3zM449 305h3v4h-3zM457 305h3v4h-3zM465 305h3v4h-3zM457 360h3v4h-3zM441 393h3v4h-3zM449 393h3v4h-3zM457 393h3v4h-3zM465 393h3v4h-3zM482 216h3v4h-3zM506 216h3v4h-3zM514 216h3v4h-3zM522 216h3v4h-3zM482 260h3v4h-3zM514 260h3v4h-3zM541 88h3v4h-3zM549 88h3v4h-3zM565 88h3v4h-3zM573 88h3v4h-3zM589 88h3v4h-3zM597 88h3v4h-3zM557 99h3v4h-3zM589 99h3v4h-3zM549 110h3v4h-3zM557 110h3v4h-3zM557 121h3v4h-3zM589 121h3v4h-3zM549 143h3v4h-3zM557 143h3v4h-3zM565 143h3v4h-3zM573 143h3v4h-3zM589 143h3v4h-3zM597 143h3v4h-3zM541 154h3v4h-3zM549 154h3v4h-3zM557 154h3v4h-3zM573 154h3v4h-3zM597 154h3v4h-3zM573 165h3v4h-3zM581 165h3v4h-3zM589 165h3v4h-3zM597 165h3v4h-3zM541 176h3v4h-3zM549 176h3v4h-3zM541 286h3v4h-3zM549 286h3v4h-3zM557 286h3v4h-3zM573 286h3v4h-3zM597 286h3v4h-3zM549 297h3v4h-3zM565 297h3v4h-3zM557 308h3v4h-3zM589 308h3v4h-3zM541 330h3v4h-3zM573 330h3v4h-3zM589 330h3v4h-3zM541 341h3v4h-3zM573 341h3v4h-3zM581 341h3v4h-3zM597 341h3v4h-3zM557 385h3v4h-3zM565 385h3v4h-3zM573 385h3v4h-3zM581 385h3v4h-3zM589 385h3v4h-3zM627 234h3v4h-3zM619 289h3v4h-3zM635 289h3v4h-3zM651 289h3v4h-3zM643 300h3v4h-3zM659 300h3v4h-3zM635 311h3v4h-3zM619 333h3v4h-3zM659 333h3v4h-3zM619 355h3v4h-3zM627 355h3v4h-3zM643 355h3v4h-3zM627 410h3v4h-3zM659 410h3v4h-3zM678 63h3v4h-3zM686 63h3v4h-3zM702 63h3v4h-3zM678 85h3v4h-3zM694 85h3v4h-3zM702 85h3v4h-3zM702 140h3v4h-3zM686 184h3v4h-3zM678 206h3v4h-3zM678 305h3v4h-3zM686 305h3v4h-3zM678 360h3v4h-3zM702 360h3v4h-3zM722 81h3v4h-3zM730 81h3v4h-3zM714 92h3v4h-3zM714 114h3v4h-3zM730 114h3v4h-3zM738 114h3v4h-3zM714 213h3v4h-3zM730 213h3v4h-3zM730 235h3v4h-3zM722 246h3v4h-3zM730 246h3v4h-3zM714 257h3v4h-3zM714 279h3v4h-3zM730 279h3v4h-3zM730 356h3v4h-3zM738 356h3v4h-3zM714 367h3v4h-3zM738 367h3v4h-3zM722 411h3v4h-3zM730 411h3v4h-3zM750 182h3v4h-3zM766 182h3v4h-3zM782 182h3v4h-3zM806 182h3v4h-3zM766 237h3v4h-3zM774 237h3v4h-3zM782 237h3v4h-3zM814 237h3v4h-3zM774 281h3v4h-3zM782 281h3v4h-3zM790 281h3v4h-3zM806 281h3v4h-3zM758 303h3v4h-3zM814 325h3v4h-3zM750 347h3v4h-3zM766 347h3v4h-3zM774 347h3v4h-3zM750 358h3v4h-3zM758 358h3v4h-3zM766 358h3v4h-3zM782 358h3v4h-3zM790 358h3v4h-3zM798 358h3v4h-3zM814 358h3v4h-3zM798 380h3v4h-3zM806 380h3v4h-3zM750 402h3v4h-3zM766 402h3v4h-3zM782 402h3v4h-3zM827 293h3v4h-3zM835 293h3v4h-3zM843 293h3v4h-3zM859 293h3v4h-3zM867 293h3v4h-3zM883 293h3v4h-3zM843 370h3v4h-3zM851 370h3v4h-3zM859 370h3v4h-3zM875 370h3v4h-3zM883 370h3v4h-3zM835 392h3v4h-3zM859 392h3v4h-3zM843 403h3v4h-3zM875 403h3v4h-3zM883 403h3v4h-3zM934 304h3v4h-3zM958 304h3v4h-3zM910 315h3v4h-3zM934 315h3v4h-3zM942 315h3v4h-3zM950 315h3v4h-3zM958 315h3v4h-3zM910 337h3v4h-3zM926 337h3v4h-3zM934 337h3v4h-3zM942 359h3v4h-3zM910 403h3v4h-3zM926 403h3v4h-3zM942 403h3v4h-3zM950 403h3v4h-3zM958 403h3v4h-3zM984 88h3v4h-3zM1008 88h3v4h-3zM1016 88h3v4h-3zM1040 88h3v4h-3zM976 99h3v4h-3zM992 99h3v4h-3zM1000 99h3v4h-3zM1016 99h3v4h-3zM1032 99h3v4h-3zM976 154h3v4h-3zM992 154h3v4h-3zM1000 154h3v4h-3zM1008 154h3v4h-3zM1016 154h3v4h-3zM976 165h3v4h-3zM984 165h3v4h-3zM1040 165h3v4h-3zM1016 187h3v4h-3zM1024 187h3v4h-3zM976 220h3v4h-3zM984 220h3v4h-3zM992 220h3v4h-3zM1040 220h3v4h-3zM1048 220h3v4h-3zM976 253h3v4h-3zM992 253h3v4h-3zM1000 253h3v4h-3zM1016 253h3v4h-3zM1024 253h3v4h-3zM1032 253h3v4h-3zM1048 253h3v4h-3zM984 308h3v4h-3zM992 352h3v4h-3zM1024 352h3v4h-3zM976 363h3v4h-3zM1040 363h3v4h-3zM976 374h3v4h-3zM1008 374h3v4h-3zM992 385h3v4h-3zM1016 385h3v4h-3zM1070 242h3v4h-3zM1078 242h3v4h-3zM1086 242h3v4h-3zM1070 275h3v4h-3zM1086 275h3v4h-3zM1102 275h3v4h-3zM1110 275h3v4h-3zM1078 330h3v4h-3zM1086 330h3v4h-3zM1094 330h3v4h-3zM1102 330h3v4h-3zM1062 341h3v4h-3zM1086 341h3v4h-3zM1094 341h3v4h-3zM1078 374h3v4h-3zM1062 385h3v4h-3zM1102 385h3v4h-3zM1110 385h3v4h-3zM1062 407h3v4h-3zM1070 407h3v4h-3zM1078 407h3v4h-3zM1086 407h3v4h-3zM1110 407h3v4h-3zM1131 61h3v4h-3zM1179 61h3v4h-3zM1131 72h3v4h-3zM1147 72h3v4h-3zM1155 72h3v4h-3zM1139 83h3v4h-3zM1147 83h3v4h-3zM1155 83h3v4h-3zM1139 94h3v4h-3zM1155 94h3v4h-3zM1163 94h3v4h-3zM1171 94h3v4h-3zM1179 94h3v4h-3zM1131 127h3v4h-3zM1147 127h3v4h-3zM1163 127h3v4h-3zM1179 127h3v4h-3zM1139 182h3v4h-3zM1147 182h3v4h-3zM1163 182h3v4h-3zM1179 182h3v4h-3zM1163 193h3v4h-3zM1139 259h3v4h-3zM1155 259h3v4h-3zM1163 259h3v4h-3zM1171 259h3v4h-3zM1179 259h3v4h-3zM1131 270h3v4h-3zM1147 270h3v4h-3zM1155 270h3v4h-3zM1163 270h3v4h-3zM1171 270h3v4h-3zM1147 347h3v4h-3zM1179 347h3v4h-3zM1147 358h3v4h-3zM1155 358h3v4h-3zM1163 358h3v4h-3zM1131 402h3v4h-3zM1155 402h3v4h-3zM1179 402h3v4h-3zM1131 413h3v4h-3zM1139 413h3v4h-3zM1171 413h3v4h-3zM1179 413h3v4h-3zM1195 122h3v4h-3zM1219 122h3v4h-3zM1219 188h3v4h-3zM1203 254h3v4h-3zM1211 254h3v4h-3zM1219 265h3v4h-3zM1195 276h3v4h-3zM1219 276h3v4h-3zM1195 287h3v4h-3zM1211 287h3v4h-3zM1211 298h3v4h-3zM1219 298h3v4h-3zM1203 408h3v4h-3zM1211 408h3v4h-3zM1247 171h3v4h-3zM1255 171h3v4h-3zM1271 171h3v4h-3zM1287 171h3v4h-3zM1255 182h3v4h-3zM1263 182h3v4h-3zM1287 182h3v4h-3zM1295 182h3v4h-3zM1303 182h3v4h-3zM1311 182h3v4h-3zM1271 193h3v4h-3zM1295 193h3v4h-3zM1303 193h3v4h-3zM1247 204h3v4h-3zM1287 204h3v4h-3zM1311 204h3v4h-3zM1279 215h3v4h-3zM1287 215h3v4h-3zM1311 215h3v4h-3zM1239 248h3v4h-3zM1255 248h3v4h-3zM1263 248h3v4h-3zM1295 248h3v4h-3zM1247 303h3v4h-3zM1263 303h3v4h-3zM1287 303h3v4h-3zM1295 303h3v4h-3zM1239 336h3v4h-3zM1263 336h3v4h-3zM1271 336h3v4h-3zM1279 336h3v4h-3zM1303 336h3v4h-3zM1255 347h3v4h-3zM1271 347h3v4h-3zM1279 347h3v4h-3zM1295 347h3v4h-3zM1247 369h3v4h-3zM1263 369h3v4h-3zM1287 369h3v4h-3zM1346 186h3v4h-3zM1322 219h3v4h-3zM1338 230h3v4h-3zM1346 230h3v4h-3zM1354 230h3v4h-3zM1330 285h3v4h-3zM1338 285h3v4h-3zM1322 307h3v4h-3zM1330 307h3v4h-3zM1338 307h3v4h-3zM1346 307h3v4h-3zM1338 329h3v4h-3zM1354 384h3v4h-3zM1370 257h3v4h-3zM1402 257h3v4h-3zM1410 257h3v4h-3zM1426 257h3v4h-3zM1370 279h3v4h-3zM1378 279h3v4h-3zM1410 279h3v4h-3zM1402 290h3v4h-3zM1410 290h3v4h-3zM1434 290h3v4h-3zM1378 312h3v4h-3zM1402 312h3v4h-3zM1410 312h3v4h-3zM1370 345h3v4h-3zM1434 345h3v4h-3zM1445 156h3v4h-3zM1453 156h3v4h-3zM1461 156h3v4h-3zM1445 167h3v4h-3zM1469 167h3v4h-3zM1485 167h3v4h-3zM1445 200h3v4h-3zM1477 200h3v4h-3zM1501 200h3v4h-3zM1517 200h3v4h-3zM1453 222h3v4h-3zM1517 222h3v4h-3zM1445 266h3v4h-3zM1453 266h3v4h-3zM1469 266h3v4h-3zM1493 266h3v4h-3zM1501 266h3v4h-3zM1445 310h3v4h-3zM1501 310h3v4h-3zM1517 310h3v4h-3zM1477 354h3v4h-3zM1493 354h3v4h-3zM1501 354h3v4h-3zM1517 354h3v4h-3zM1445 365h3v4h-3zM1477 365h3v4h-3zM1493 365h3v4h-3zM1509 365h3v4h-3zM1445 376h3v4h-3zM1461 376h3v4h-3zM1469 376h3v4h-3zM1477 376h3v4h-3zM1485 376h3v4h-3zM1493 376h3v4h-3zM1532 150h3v4h-3zM1540 150h3v4h-3zM1556 150h3v4h-3zM1532 172h3v4h-3zM1540 172h3v4h-3zM1540 183h3v4h-3zM1540 227h3v4h-3zM1556 227h3v4h-3zM1556 238h3v4h-3zM1540 315h3v4h-3zM1548 337h3v4h-3zM1556 370h3v4h-3zM1532 392h3v4h-3zM1548 392h3v4h-3zM1556 392h3v4h-3zM1568 65h3v4h-3zM1576 65h3v4h-3zM1584 65h3v4h-3zM1624 65h3v4h-3zM1600 87h3v4h-3zM1568 98h3v4h-3zM1624 98h3v4h-3zM1568 109h3v4h-3zM1576 109h3v4h-3zM1600 109h3v4h-3zM1608 109h3v4h-3zM1616 109h3v4h-3zM1624 109h3v4h-3zM1584 131h3v4h-3zM1592 131h3v4h-3zM1600 131h3v4h-3zM1616 131h3v4h-3zM1568 142h3v4h-3zM1584 142h3v4h-3zM1608 142h3v4h-3zM1616 142h3v4h-3zM1576 186h3v4h-3zM1584 186h3v4h-3zM1592 186h3v4h-3zM1600 186h3v4h-3zM1608 186h3v4h-3zM1616 186h3v4h-3zM1624 186h3v4h-3zM1592 252h3v4h-3zM1600 252h3v4h-3zM1592 263h3v4h-3zM1600 263h3v4h-3zM1608 263h3v4h-3zM1624 263h3v4h-3zM1608 395h3v4h-3z" fill="hsl(38 45% 78%)" opacity="0.5"/><path d="M-8 228h3v4h-3zM0 228h3v4h-3zM8 228h3v4h-3zM8 250h3v4h-3zM0 261h3v4h-3zM8 294h3v4h-3zM45 209h3v4h-3zM37 407h3v4h-3zM113 391h3v4h-3zM210 86h3v4h-3zM218 86h3v4h-3zM272 223h3v4h-3zM296 289h3v4h-3zM288 322h3v4h-3zM248 333h3v4h-3zM280 355h3v4h-3zM288 355h3v4h-3zM339 180h3v4h-3zM323 213h3v4h-3zM355 213h3v4h-3zM323 246h3v4h-3zM339 246h3v4h-3zM385 337h3v4h-3zM425 337h3v4h-3zM409 381h3v4h-3zM425 381h3v4h-3zM401 403h3v4h-3zM449 217h3v4h-3zM490 216h3v4h-3zM565 110h3v4h-3zM549 165h3v4h-3zM597 297h3v4h-3zM643 410h3v4h-3zM738 81h3v4h-3zM730 202h3v4h-3zM714 235h3v4h-3zM730 257h3v4h-3zM738 257h3v4h-3zM722 312h3v4h-3zM750 281h3v4h-3zM798 281h3v4h-3zM814 281h3v4h-3zM798 347h3v4h-3zM950 337h3v4h-3zM918 403h3v4h-3zM976 88h3v4h-3zM1040 154h3v4h-3zM1008 187h3v4h-3zM1048 308h3v4h-3zM1000 352h3v4h-3zM1016 352h3v4h-3zM1062 275h3v4h-3zM1078 275h3v4h-3zM1102 374h3v4h-3zM1163 72h3v4h-3zM1163 83h3v4h-3zM1155 182h3v4h-3zM1131 347h3v4h-3zM1131 358h3v4h-3zM1163 413h3v4h-3zM1203 122h3v4h-3zM1219 254h3v4h-3zM1239 215h3v4h-3zM1271 303h3v4h-3zM1287 347h3v4h-3zM1311 369h3v4h-3zM1330 186h3v4h-3zM1322 285h3v4h-3zM1453 167h3v4h-3zM1469 200h3v4h-3zM1493 200h3v4h-3zM1509 200h3v4h-3zM1485 266h3v4h-3zM1453 354h3v4h-3zM1517 376h3v4h-3zM1556 337h3v4h-3zM1532 370h3v4h-3zM1584 98h3v4h-3zM1568 395h3v4h-3z" fill="hsl(322 85% 62%)" opacity="0.7"/><path d="M-8 261h3v4h-3zM0 316h3v4h-3zM137 391h3v4h-3zM186 86h3v4h-3zM218 196h3v4h-3zM226 196h3v4h-3zM256 289h3v4h-3zM347 400h3v4h-3zM417 381h3v4h-3zM457 129h3v4h-3zM441 305h3v4h-3zM573 110h3v4h-3zM565 121h3v4h-3zM581 154h3v4h-3zM597 176h3v4h-3zM549 341h3v4h-3zM635 234h3v4h-3zM627 289h3v4h-3zM651 333h3v4h-3zM722 92h3v4h-3zM722 213h3v4h-3zM806 237h3v4h-3zM766 303h3v4h-3zM782 303h3v4h-3zM790 347h3v4h-3zM843 392h3v4h-3zM835 403h3v4h-3zM851 403h3v4h-3zM958 326h3v4h-3zM984 154h3v4h-3zM1008 385h3v4h-3zM1032 385h3v4h-3zM1070 330h3v4h-3zM1070 341h3v4h-3zM1139 61h3v4h-3zM1171 83h3v4h-3zM1163 402h3v4h-3zM1195 188h3v4h-3zM1219 408h3v4h-3zM1247 215h3v4h-3zM1279 303h3v4h-3zM1263 347h3v4h-3zM1330 219h3v4h-3zM1426 290h3v4h-3zM1402 345h3v4h-3zM1461 310h3v4h-3zM1485 354h3v4h-3zM1509 354h3v4h-3zM1461 365h3v4h-3zM1509 376h3v4h-3zM1556 183h3v4h-3zM1532 315h3v4h-3zM1592 65h3v4h-3zM1608 65h3v4h-3zM1592 98h3v4h-3zM1616 98h3v4h-3zM1624 395h3v4h-3z" fill="hsl(272 80% 66%)" opacity="0.7"/><path d="M-16 206h3v4h-3zM16 217h3v4h-3zM-16 250h3v4h-3zM-16 261h3v4h-3zM45 143h3v4h-3zM53 143h3v4h-3zM53 275h3v4h-3zM53 407h3v4h-3zM226 86h3v4h-3zM186 196h3v4h-3zM194 251h3v4h-3zM256 223h3v4h-3zM248 289h3v4h-3zM280 289h3v4h-3zM248 300h3v4h-3zM280 300h3v4h-3zM288 300h3v4h-3zM296 300h3v4h-3zM264 311h3v4h-3zM331 180h3v4h-3zM339 312h3v4h-3zM347 345h3v4h-3zM417 403h3v4h-3zM425 403h3v4h-3zM457 173h3v4h-3zM449 184h3v4h-3zM465 184h3v4h-3zM441 217h3v4h-3zM465 217h3v4h-3zM465 294h3v4h-3zM498 260h3v4h-3zM530 260h3v4h-3zM581 143h3v4h-3zM589 286h3v4h-3zM541 297h3v4h-3zM597 308h3v4h-3zM541 385h3v4h-3zM549 385h3v4h-3zM619 234h3v4h-3zM651 311h3v4h-3zM619 410h3v4h-3zM635 410h3v4h-3zM702 184h3v4h-3zM694 206h3v4h-3zM722 356h3v4h-3zM790 182h3v4h-3zM798 182h3v4h-3zM798 237h3v4h-3zM750 325h3v4h-3zM758 325h3v4h-3zM766 325h3v4h-3zM790 325h3v4h-3zM798 325h3v4h-3zM758 402h3v4h-3zM806 402h3v4h-3zM814 402h3v4h-3zM867 392h3v4h-3zM891 392h3v4h-3zM950 304h3v4h-3zM918 315h3v4h-3zM926 326h3v4h-3zM934 326h3v4h-3zM918 337h3v4h-3zM942 337h3v4h-3zM934 359h3v4h-3zM958 359h3v4h-3zM1040 99h3v4h-3zM1024 154h3v4h-3zM1032 165h3v4h-3zM1032 187h3v4h-3zM984 253h3v4h-3zM976 308h3v4h-3zM1008 308h3v4h-3zM1032 308h3v4h-3zM1048 352h3v4h-3zM984 363h3v4h-3zM1016 363h3v4h-3zM1048 363h3v4h-3zM984 374h3v4h-3zM1032 374h3v4h-3zM1040 385h3v4h-3zM1094 242h3v4h-3zM1163 61h3v4h-3zM1171 72h3v4h-3zM1179 83h3v4h-3zM1155 127h3v4h-3zM1171 127h3v4h-3zM1131 182h3v4h-3zM1171 182h3v4h-3zM1131 193h3v4h-3zM1147 193h3v4h-3zM1155 193h3v4h-3zM1131 259h3v4h-3zM1139 347h3v4h-3zM1139 402h3v4h-3zM1171 402h3v4h-3zM1155 413h3v4h-3zM1211 188h3v4h-3zM1203 210h3v4h-3zM1219 210h3v4h-3zM1211 265h3v4h-3zM1279 171h3v4h-3zM1263 215h3v4h-3zM1303 215h3v4h-3zM1239 303h3v4h-3zM1255 303h3v4h-3zM1303 303h3v4h-3zM1287 336h3v4h-3zM1295 336h3v4h-3zM1239 347h3v4h-3zM1255 369h3v4h-3zM1338 219h3v4h-3zM1346 219h3v4h-3zM1322 274h3v4h-3zM1338 274h3v4h-3zM1346 329h3v4h-3zM1330 384h3v4h-3zM1386 279h3v4h-3zM1394 290h3v4h-3zM1418 290h3v4h-3zM1426 312h3v4h-3zM1426 345h3v4h-3zM1501 156h3v4h-3zM1501 167h3v4h-3zM1453 200h3v4h-3zM1461 266h3v4h-3zM1509 266h3v4h-3zM1461 354h3v4h-3zM1453 365h3v4h-3zM1469 365h3v4h-3zM1556 172h3v4h-3zM1548 227h3v4h-3zM1548 315h3v4h-3zM1556 315h3v4h-3zM1548 370h3v4h-3zM1576 87h3v4h-3zM1576 98h3v4h-3zM1600 98h3v4h-3zM1608 98h3v4h-3zM1584 109h3v4h-3zM1592 109h3v4h-3zM1608 131h3v4h-3zM1624 131h3v4h-3zM1600 142h3v4h-3zM1568 252h3v4h-3zM1576 252h3v4h-3zM1608 252h3v4h-3zM1624 252h3v4h-3zM1576 395h3v4h-3zM1592 395h3v4h-3z" fill="hsl(212 90% 62%)" opacity="0.75"/><rect x="28" y="200" width="1.6" height="220" fill="hsl(322 85% 62%)" opacity=".35"/><circle cx="209.8" cy="31" r="1.8" fill="hsl(0 90% 60%)" class="bk"/><rect x="234" y="69" width="1.6" height="351" fill="hsl(322 85% 62%)" opacity=".35"/><rect x="363" y="174" width="1.6" height="246" fill="hsl(322 85% 62%)" opacity=".35"/><rect x="476" y="90" width="1.6" height="330" fill="hsl(212 90% 62%)" opacity=".35"/><circle cx="507.8" cy="139" r="1.8" fill="hsl(0 90% 60%)" class="bk"/><circle cx="572.8" cy="44" r="1.8" fill="hsl(0 90% 60%)" class="bk"/><circle cx="643.8" cy="179" r="1.8" fill="hsl(0 90% 60%)" class="bk"/><rect x="669" y="217" width="1.6" height="203" fill="hsl(272 80% 66%)" opacity=".35"/><rect x="620" y="380" width="46" height="2.5" fill="hsl(322 85% 62%)" opacity=".5"/><rect x="679" y="262" width="26" height="2.5" fill="hsl(212 90% 62%)" opacity=".5"/><rect x="744" y="64" width="1.6" height="356" fill="hsl(212 90% 62%)" opacity=".35"/><rect x="715" y="211" width="26" height="2.5" fill="hsl(322 85% 62%)" opacity=".5"/><rect x="1122" y="236" width="1.6" height="184" fill="hsl(322 85% 62%)" opacity=".35"/><circle cx="1159.8" cy="17" r="1.8" fill="hsl(0 90% 60%)" class="bk"/><rect x="1132" y="380" width="54" height="2.5" fill="hsl(272 80% 66%)" opacity=".5"/><rect x="1196" y="371" width="31" height="2.5" fill="hsl(272 80% 66%)" opacity=".5"/><circle cx="1276.8" cy="105" r="1.8" fill="hsl(0 90% 60%)" class="bk"/><rect x="1364" y="158" width="1.6" height="262" fill="hsl(272 80% 66%)" opacity=".35"/><rect x="1323" y="185" width="38" height="2.5" fill="hsl(212 90% 62%)" opacity=".5"/><rect x="1439" y="229" width="1.6" height="191" fill="hsl(272 80% 66%)" opacity=".35"/><rect x="1446" y="239" width="77" height="2.5" fill="hsl(272 80% 66%)" opacity=".5"/><rect x="1636" y="59" width="1.6" height="361" fill="hsl(212 90% 62%)" opacity=".35"/></symbol><symbol id="sk-near" viewBox="0 0 1600 420"><g fill="url(#gnear)"><rect x="-20" y="182" width="130" height="238"/><rect x="45" y="148" width="1.6" height="34"/><rect x="110" y="127" width="117" height="293"/><polygon points="243,420 243,138 273,108 312,108 342,138 342,420"/><rect x="350" y="209" width="117" height="211"/><rect x="373" y="193" width="70" height="16"/><rect x="467" y="393" width="79" height="27"/><rect x="554" y="413" width="81" height="7"/><rect x="651" y="401" width="98" height="19"/><rect x="749" y="397" width="124" height="23"/><rect x="889" y="392" width="141" height="28"/><rect x="1046" y="412" width="91" height="8"/><rect x="1145" y="399" width="146" height="21"/><rect x="1307" y="86" width="73" height="334"/><rect x="1383" y="158" width="115" height="262"/><rect x="1501" y="165" width="100" height="255"/></g><circle cx="45.8" cy="148" r="1.8" fill="hsl(0 90% 60%)" class="bk"/></symbol></defs></svg><div class="scene" id="scene" aria-hidden="true">
+<div class="glow"></div>
+<div class="layer l-city l-far"><svg class="sk " viewBox="0 0 1600 420" preserveAspectRatio="xMidYMax slice"><use href="#sk-far" width="1600" height="420"/></svg></div>
+<div class="layer l-city l-mid"><svg class="sk " viewBox="0 0 1600 420" preserveAspectRatio="xMidYMax slice"><use href="#sk-mid" width="1600" height="420"/></svg></div>
+<div class="ground"><div class="layer refl"><svg class="sk " viewBox="0 0 1600 420" preserveAspectRatio="xMidYMax slice"><use href="#sk-mid" width="1600" height="420"/></svg></div><div class="layer l-rs"><i style="left:7%;width:10px;height:70%;--c:322;--dl:-0s"></i><i style="left:19%;width:7px;height:50%;--c:212;--dl:-2s"></i><i style="left:31%;width:12px;height:85%;--c:272;--dl:-4s"></i><i style="left:44%;width:8px;height:60%;--c:212;--dl:-1s"></i><i style="left:57%;width:10px;height:75%;--c:322;--dl:-5s"></i><i style="left:68%;width:7px;height:55%;--c:272;--dl:-3s"></i><i style="left:79%;width:12px;height:80%;--c:212;--dl:-6s"></i><i style="left:91%;width:8px;height:60%;--c:322;--dl:-2s"></i></div><div class="streaks"><i style="left:10%;top:24%;width:20%;--c:322;--dl:-0s"></i><i style="left:45%;top:40%;width:18%;--c:212;--dl:-3s"></i><i style="left:66%;top:20%;width:22%;--c:272;--dl:-5s"></i><i style="left:22%;top:62%;width:16%;--c:212;--dl:-2s"></i><i style="left:74%;top:70%;width:18%;--c:322;--dl:-6s"></i></div></div>
+<div class="layer l-fog"><div class="fog fog1"></div><div class="fog fog2"></div></div>
+<div class="layer l-beams"><div class="beam b1"></div><div class="beam b2"></div><div class="beam b3"></div></div>
+<div class="layer l-bokeh"><i style="left:24%;bottom:44vh;width:36px;height:36px;--dl:-6s;--c:212"></i><i style="left:64%;bottom:37vh;width:39px;height:39px;--dl:-7s;--c:272"></i><i style="left:67%;bottom:47vh;width:21px;height:21px;--dl:-0s;--c:322"></i><i style="left:50%;bottom:49vh;width:27px;height:27px;--dl:-1s;--c:272"></i><i style="left:32%;bottom:38vh;width:36px;height:36px;--dl:-0s;--c:212"></i><i style="left:55%;bottom:50vh;width:28px;height:28px;--dl:-0s;--c:212"></i><i style="left:72%;bottom:46vh;width:36px;height:36px;--dl:-1s;--c:212"></i><i style="left:5%;bottom:35vh;width:37px;height:37px;--dl:-1s;--c:322"></i><i style="left:5%;bottom:45vh;width:19px;height:19px;--dl:-8s;--c:212"></i><i style="left:54%;bottom:46vh;width:18px;height:18px;--dl:-2s;--c:322"></i><i style="left:63%;bottom:38vh;width:16px;height:16px;--dl:-3s;--c:272"></i><i style="left:89%;bottom:49vh;width:37px;height:37px;--dl:-1s;--c:322"></i></div>
+<div class="layer l-city l-near"><svg class="sk " viewBox="0 0 1600 420" preserveAspectRatio="xMidYMax slice"><use href="#sk-near" width="1600" height="420"/></svg></div>
+<div class="rain rain1"></div><div class="rain rain2"></div>
+<div class="vig"></div><div class="grain"></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-gamepad" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.545-.604-6.584-.685-7.258A4 4 0 0 0 17.32 5z"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+
+  <div class="top">
+    <svg class="logo" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" aria-hidden="true"><path d="M5 34V10l8 8 7-12 7 12 8-8v24z"/></svg>
+    <span class="sep"></span>
+    <div class="greet">İYİ EĞLENCELER DİLERİZ</div>
+  </div>
+
+  <div class="layout">
+
+    <aside class="side">
+      <div class="box profile">
+        <div class="avatar"><img id="avatar" alt="Discord profil fotoğrafı" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Crect width='80' height='80' fill='%231a0f12'/%3E%3Ccircle cx='40' cy='32' r='14' fill='%23ff1f3d'/%3E%3Cpath d='M12 80c0-18 12-26 28-26s28 8 28 26z' fill='%23ff1f3d'/%3E%3C/svg%3E"></div>
+        <div>
+          <div class="pname" id="pname">Day4nc</div>
+          <div class="phandle" id="phandle">@day4nc</div>
+          <div class="status" id="status"><i></i><span id="statustext">Çevrimiçi</span></div>
+        </div>
+      </div>
+
+      <div class="box access">
+        <div class="hex"><svg><use href="#i-lock"/></svg></div>
+        <div>
+          <div class="small">Erişim Sunucuya Bağlı</div>
+          <div class="big">Şifre Day4nc</div>
+        </div>
+      </div>
+    </aside>
+
+    <main>
+      <h1>Oyun <span>Merkezi</span></h1>
+
+      <div class="list">
+        <a class="item a1" href="https://link60.com/tn8trj" target="_blank" rel="noopener noreferrer">
+          <div class="hex"><svg><use href="#i-gamepad"/></svg></div>
+          <div><div class="t">GTA 5 Online</div><div class="d">Hemen oyuna giriş yap ve arkadaşlarınla buluş.</div></div>
+          <div class="go"><svg><use href="#i-chev"/></svg></div>
+        </a>
+
+        <a class="item a2" href="https://link60.com/4h5k8g" target="_blank" rel="noopener noreferrer">
+          <div class="hex"><svg><use href="#i-file"/></svg></div>
+          <div><div class="t">GTA 5 Lua Scripts</div><div class="d">Özel script dosyalarını indir ve kullan.</div></div>
+          <div class="go"><svg><use href="#i-chev"/></svg></div>
+        </a>
+
+        <a class="item a3" href="https://link60.com/3ee3r7" target="_blank" rel="noopener noreferrer">
+          <div class="hex"><svg><use href="#i-compass"/></svg></div>
+          <div><div class="t">Forza Horizon 5</div><div class="d">Efsanevi yarış deneyimini yaşa.</div></div>
+          <div class="go"><svg><use href="#i-chev"/></svg></div>
+        </a>
+
+        <a class="item a4" href="https://link60.com/2d32vv" target="_blank" rel="noopener noreferrer">
+          <div class="hex"><svg><use href="#i-users"/></svg></div>
+          <div><div class="t">League of Legends</div><div class="d">Şampiyonlarını seç ve rünlerini hazırla.</div></div>
+          <div class="go"><svg><use href="#i-chev"/></svg></div>
+        </a>
+
+        <a class="item a5" href="https://link60.com/ng9v1f" target="_blank" rel="noopener noreferrer">
+          <div class="hex"><svg><use href="#i-server"/></svg></div>
+          <div><div class="t">FiveM</div><div class="d">Oyun keyfini en üst seviyeye çıkar.</div></div>
+          <div class="go"><svg><use href="#i-chev"/></svg></div>
+        </a>
+      </div>
+
+      <footer>© 2026 Day4nc.store | Tüm hakları saklıdır.</footer>
+    </main>
+  </div>
+</div>
+
+<script>
+/* Discord profili: Lanyard API ile canlı çekilir.
+   Çalışması için Discord hesabının discord.gg/lanyard sunucusunda olması gerekir.
+   Olmazsa sayfa varsayılan bilgileri (Day4nc / Çevrimiçi) gösterir. */
+(function(){
+  var ID = "776420528943923200";
+  var labels = {online:"Çevrimiçi", idle:"Boşta", dnd:"Rahatsız Etmeyin", offline:"Çevrimdışı"};
+  fetch("https://api.lanyard.rest/v1/users/" + ID)
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if(!j || !j.success) return;
+      var d = j.data, u = d.discord_user || {};
+      if(u.global_name || u.username) document.getElementById("pname").textContent = u.global_name || u.username;
+      if(u.username) document.getElementById("phandle").textContent = "@" + u.username;
+      if(u.avatar){
+        var ext = u.avatar.indexOf("a_") === 0 ? "gif" : "png";
+        document.getElementById("avatar").src = "https://cdn.discordapp.com/avatars/" + ID + "/" + u.avatar + "." + ext + "?size=256";
+      }
+      var s = d.discord_status || "offline";
+      var el = document.getElementById("status");
+      el.className = "status " + s;
+      document.getElementById("statustext").textContent = labels[s] || "Çevrimdışı";
+    })
+    .catch(function(){});
+})();
+</script>
+<script>
+/* Mouse parallax: hafif, yumuşatmalı (lerp), sadece fare hareket ederken çalışır */
+(function(){
+  if(matchMedia('(prefers-reduced-motion:reduce),(hover:none),(max-width:768px)').matches) return;
+  var sc=document.getElementById('scene'),tx=0,ty=0,cx=0,cy=0,raf=0;
+  function tick(){
+    cx+=(tx-cx)*.04; cy+=(ty-cy)*.04;
+    sc.style.setProperty('--px',cx.toFixed(4)); sc.style.setProperty('--py',cy.toFixed(4));
+    raf=(Math.abs(tx-cx)>.001||Math.abs(ty-cy)>.001)?requestAnimationFrame(tick):0;
+  }
+  function go(){ if(!raf) raf=requestAnimationFrame(tick); }
+  addEventListener('pointermove',function(e){
+    tx=Math.max(-1,Math.min(1,e.clientX/innerWidth*2-1));
+    ty=Math.max(-1,Math.min(1,e.clientY/innerHeight*2-1)); go();
+  },{passive:true});
+  document.addEventListener('mouseleave',function(){tx=0;ty=0;go();});
+})();
+</script>
+</body>
+</html>
